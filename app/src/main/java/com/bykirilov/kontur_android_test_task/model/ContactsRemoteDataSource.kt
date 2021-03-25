@@ -9,6 +9,6 @@ class ContactsRemoteDataSource(val apiService: APIService) {
         for (i in 1..3) {
             result += apiService.getContacts(i)
         }
-        return result.toList()
+        return result
     }
 }

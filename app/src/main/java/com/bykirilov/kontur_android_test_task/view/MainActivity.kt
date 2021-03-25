@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager
                     .beginTransaction()
-                    .add(
+                    .replace(
                             R.id.fragment_container,
                             ContactsListFragment.newInstance(),
                             "tag"
