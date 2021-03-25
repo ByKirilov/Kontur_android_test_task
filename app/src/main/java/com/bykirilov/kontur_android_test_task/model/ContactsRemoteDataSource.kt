@@ -1,8 +1,14 @@
 package com.bykirilov.kontur_android_test_task.model
 
-class ContactsRemoteDataSource {
+import com.bykirilov.kontur_android_test_task.network.APIService
 
-    fun getContacts(): List<Contact> {
-        return emptyList()
+class ContactsRemoteDataSource(val apiService: APIService) {
+
+    suspend fun getContacts(): List<Contact> {
+        val result = mutableListOf<Contact>()
+        for (i in 1..3) {
+            result += apiService.getContacts(i)
+        }
+        return result.toList()
     }
 }

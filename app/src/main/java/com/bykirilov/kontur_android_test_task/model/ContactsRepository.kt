@@ -1,13 +1,14 @@
 package com.bykirilov.kontur_android_test_task.model
 
 import com.bykirilov.kontur_android_test_task.managers.NetManager
+import com.bykirilov.kontur_android_test_task.network.APIService
 
-class ContactsRepository(val netManager: NetManager) {
+class ContactsRepository(private val netManager: NetManager) {
 
     private val localDataSource = ContactsLocalDataSource()
-    private val remoteDataSource = ContactsRemoteDataSource()
+    private val remoteDataSource = ContactsRemoteDataSource(APIService.create())
 
-    fun getContacts(): List<Contact>? {
+    suspend fun getContacts(): List<Contact>? {
         netManager.isConnectedToInternet?.let {
             return if (it) {
                 remoteDataSource.getContacts().also { contacts ->
