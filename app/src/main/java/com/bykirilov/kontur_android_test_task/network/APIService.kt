@@ -1,6 +1,6 @@
 package com.bykirilov.kontur_android_test_task.network
 
-import com.bykirilov.kontur_android_test_task.model.Contact
+import com.bykirilov.kontur_android_test_task.model.ContactPOJO
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 interface APIService {
 
     @GET("SkbkonturMobile/mobile-test-droid/master/json/generated-0{id}.json")
-    suspend fun getContacts(@Path("id") id: Int): List<Contact>
+    suspend fun getContacts(@Path("id") id: Int): List<ContactPOJO>
 
     companion object Factory {
         fun create(): APIService {

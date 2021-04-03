@@ -1,8 +1,9 @@
 package com.bykirilov.kontur_android_test_task.model
 
+import com.bykirilov.kontur_android_test_task.model.database.Contact
 import com.google.gson.annotations.SerializedName
 
-data class Contact(
+data class ContactPOJO(
         @SerializedName("id")
         val id: String,
         @SerializedName("name")
@@ -25,3 +26,16 @@ data class EducationPeriod(
         @SerializedName("end")
         val end: String,
 )
+
+fun ContactPOJO.toContact(): Contact {
+        return Contact(
+                id,
+                name,
+                phone,
+                height,
+                biography,
+                temperament,
+                educationPeriod.start,
+                educationPeriod.end
+        )
+}
