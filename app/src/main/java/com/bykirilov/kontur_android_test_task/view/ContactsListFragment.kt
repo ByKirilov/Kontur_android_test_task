@@ -49,10 +49,14 @@ class ContactsListFragment : Fragment() {
         }
 
         val loadingView = view.findViewById<ProgressBar>(R.id.loading)
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading: Boolean ->
             loadingView.visibility = when (isLoading) {
                 true -> View.VISIBLE
-                else -> View.GONE
+                false -> View.GONE
+            }
+            recyclerView.visibility = when (isLoading) {
+                true -> View.GONE
+                false -> View.VISIBLE
             }
         }
 

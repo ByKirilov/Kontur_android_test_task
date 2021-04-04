@@ -1,11 +1,12 @@
 package com.bykirilov.kontur_android_test_task.model
 
-import android.annotation.SuppressLint
 import android.content.Context
 import com.bykirilov.kontur_android_test_task.managers.NetManager
 import com.bykirilov.kontur_android_test_task.model.database.Contact
 import com.bykirilov.kontur_android_test_task.model.database.ContactDao
 import com.bykirilov.kontur_android_test_task.network.APIService
+import java.net.ConnectException
+import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 
 class ContactsRepository(private val context: Context, private val contactDao: ContactDao) {
@@ -27,11 +28,17 @@ class ContactsRepository(private val context: Context, private val contactDao: C
         val netManager = NetManager(context)
         netManager.isConnectedToInternet?.let {
              if (it) {
-                remoteDataSource.getContacts().also { contacts ->
-                    localDataSource.saveContacts(contacts)
-                }
-                updateLastDownloadTime()
-                return SUCCESS_REQUEST_CODE
+                 return try {
+                     remoteDataSource.getContacts().also { contacts ->
+                         localDataSource.saveContacts(contacts)
+                     }
+                     updateLastDownloadTime()
+                     SUCCESS_REQUEST_CODE
+                 } catch (e: ConnectException) {
+                     NO_INTERNET_REQUEST_CODE
+                 } catch (e: UnknownHostException) {
+                     NO_INTERNET_REQUEST_CODE
+                 }
             }
         }
         return NO_INTERNET_REQUEST_CODE

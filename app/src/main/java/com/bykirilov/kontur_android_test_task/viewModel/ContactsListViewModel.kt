@@ -10,12 +10,11 @@ class ContactsListViewModel(private val repository: ContactsRepository) : ViewMo
 
     val contacts: LiveData<List<Contact>> = repository.contacts.asLiveData()
 
-    val isLoading: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
-
     private val _showSnackBar = MutableLiveData<Event<String>>()
-
     val showSnackBar: LiveData<Event<String>>
         get() = _showSnackBar
+
+    val isLoading: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
     fun preferContacts() = viewModelScope.launch {
         if (repository.isDataObsolete) {
