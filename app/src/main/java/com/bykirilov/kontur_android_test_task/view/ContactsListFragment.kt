@@ -9,6 +9,7 @@ import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bykirilov.kontur_android_test_task.ContactsApplication
@@ -39,8 +40,11 @@ class ContactsListFragment : Fragment() {
 
         val adapter = ContactListAdapter()
         val recyclerView = view.findViewById<RecyclerView>(R.id.contact_recyclerview)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.apply {
+            this.adapter = adapter
+            layoutManager = LinearLayoutManager(activity)
+            addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
+        }
 
         viewModel.contacts.observe(viewLifecycleOwner) { contacts ->
             contacts?.let {

@@ -19,16 +19,18 @@ class ContactListAdapter : ListAdapter<Contact, ContactListAdapter.ContactViewHo
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(current.name, current.phone)
+        holder.bind(current.name, current.phone, current.height.toString())
     }
 
     class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val contactNameItemView: TextView = itemView.findViewById(R.id.contact_name)
         private val contactPhoneItemView: TextView = itemView.findViewById(R.id.contact_phone)
+        private val contactHeightItemView: TextView = itemView.findViewById(R.id.contact_height)
 
-        fun bind(contactName: String?, contactPhone: String?) {
+        fun bind(contactName: String?, contactPhone: String?, contactHeight: String?) {
             contactNameItemView.text = contactName
             contactPhoneItemView.text = contactPhone
+            contactHeightItemView.text = contactHeight
         }
 
         companion object {
