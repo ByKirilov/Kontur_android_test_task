@@ -13,12 +13,19 @@
         android:indeterminate="true"
         android:layout_gravity="center"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:id="@+id/contact_recyclerview"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:listitem="@layout/recyclerview_item" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:id="@+id/contact_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/recyclerview_item" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>

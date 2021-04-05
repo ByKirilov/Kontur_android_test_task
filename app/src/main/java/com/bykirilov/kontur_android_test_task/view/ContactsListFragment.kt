@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bykirilov.kontur_android_test_task.ContactsApplication
 import com.bykirilov.kontur_android_test_task.R
 import com.bykirilov.kontur_android_test_task.databinding.FragmentContactsListBinding
@@ -46,6 +47,12 @@ class ContactsListFragment : Fragment() {
             addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
         }
 
+        val swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)
+        swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = false
+            viewModel.updateContacts()
+        }
+
         viewModel.contacts.observe(viewLifecycleOwner) { contacts ->
             contacts?.let {
                 adapter.submitList(it)
@@ -58,7 +65,7 @@ class ContactsListFragment : Fragment() {
                 true -> View.VISIBLE
                 false -> View.GONE
             }
-            recyclerView.visibility = when (isLoading) {
+            swipeRefreshLayout.visibility = when (isLoading) {
                 true -> View.GONE
                 false -> View.VISIBLE
             }

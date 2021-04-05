@@ -16,20 +16,24 @@ class ContactsListViewModel(private val repository: ContactsRepository) : ViewMo
 
     val isLoading: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
-    fun preferContacts() = viewModelScope.launch {
+    fun preferContacts() {
         if (repository.isDataObsolete) {
-            repository.clearContacts()
-            loadContacts()
+            updateContacts()
         }
     }
 
-    fun loadContacts() = viewModelScope.launch {
-            isLoading.value = true
+    fun updateContacts() = viewModelScope.launch {
+        isLoading.value = true
+        repository.clearContacts()
+        loadContacts()
+        isLoading.value = false
+    }
+
+    private suspend fun loadContacts() {
             val requestCode = repository.loadContactsWithRequestCode()
             if (requestCode == ContactsRepository.NO_INTERNET_REQUEST_CODE) {
                 _showSnackBar.value = Event(NO_INTERNET_MESSAGE)
             }
-            isLoading.value = false
         }
 
     fun insert(contact: Contact) = viewModelScope.launch {
