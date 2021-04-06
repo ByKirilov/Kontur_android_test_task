@@ -10,6 +10,8 @@ class ContactsLocalDataSource(private val contactDao: ContactDao) {
 
     val contacts: Flow<List<Contact>> = contactDao.getAllContacts()
 
+    suspend fun getContactById(id: String) = contactDao.getContactById(id)
+
     suspend fun saveContacts(contacts: List<Contact>) {
         for (contact in contacts) {
             contactDao.insert(contact)

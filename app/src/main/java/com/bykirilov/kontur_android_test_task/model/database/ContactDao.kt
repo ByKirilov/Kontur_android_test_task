@@ -12,6 +12,9 @@ interface ContactDao {
     @Query("SELECT * FROM contact_table")
     fun getAllContacts(): Flow<List<Contact>>
 
+    @Query("SELECT * FROM contact_table WHERE id LIKE :id LIMIT 1")
+    suspend fun getContactById(id: String): Contact?
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(contact: Contact)
 

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bykirilov.kontur_android_test_task.R
 import com.bykirilov.kontur_android_test_task.model.database.Contact
 
-class ContactListAdapter : ListAdapter<Contact, ContactListAdapter.ContactViewHolder>(ContactComparator()) {
+class ContactListAdapter(val itemClickListener: OnItemClickListener) : ListAdapter<Contact, ContactListAdapter.ContactViewHolder>(ContactComparator()) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
@@ -19,7 +19,7 @@ class ContactListAdapter : ListAdapter<Contact, ContactListAdapter.ContactViewHo
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(current.name, current.phone, current.height.toString())
+        holder.bind(current, itemClickListener)
     }
 
     class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -27,10 +27,15 @@ class ContactListAdapter : ListAdapter<Contact, ContactListAdapter.ContactViewHo
         private val contactPhoneItemView: TextView = itemView.findViewById(R.id.contact_phone)
         private val contactHeightItemView: TextView = itemView.findViewById(R.id.contact_height)
 
-        fun bind(contactName: String?, contactPhone: String?, contactHeight: String?) {
-            contactNameItemView.text = contactName
-            contactPhoneItemView.text = contactPhone
-            contactHeightItemView.text = contactHeight
+        fun bind(contact: Contact?,
+                 itemClickListener: OnItemClickListener) {
+            contactNameItemView.text = contact?.name
+            contactPhoneItemView.text = contact?.phone
+            contactHeightItemView.text = contact?.height.toString()
+
+            contact?.let { contact ->
+                itemView.setOnClickListener{ itemClickListener.onItemClicked(contact) }
+            }
         }
 
         companion object {

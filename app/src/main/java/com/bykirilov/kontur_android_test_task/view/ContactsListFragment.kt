@@ -32,24 +32,32 @@ class ContactsListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_contacts_list, container, false)
+    ): View {
 
         viewModel.preferContacts()
 
         binding = FragmentContactsListBinding.inflate(layoutInflater)
+        val view = binding.root
 
-        val adapter = ContactListAdapter()
-        val recyclerView = view.findViewById<RecyclerView>(R.id.contact_recyclerview)
-        recyclerView.apply {
+        val adapter = ContactListAdapter(object : OnItemClickListener {
+            override fun onItemClicked(contact: Contact) {
+                activity!!.supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.fragment_container,
+                            ContactDetailsFragment.newInstance(Bundle().apply {
+                                putString(ContactDetailsFragment.CONTACT_ID, contact.id) }))
+                        .addToBackStack("details")
+                        .commit()
+            }
+        })
+        binding.contactRecyclerview.apply {
             this.adapter = adapter
             layoutManager = LinearLayoutManager(activity)
             addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
         }
 
-        val swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)
-        swipeRefreshLayout.setOnRefreshListener {
-            swipeRefreshLayout.isRefreshing = false
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            binding.swipeRefreshLayout.isRefreshing = false
             viewModel.updateContacts()
         }
 
@@ -59,13 +67,12 @@ class ContactsListFragment : Fragment() {
             }
         }
 
-        val loadingView = view.findViewById<ProgressBar>(R.id.loading)
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading: Boolean ->
-            loadingView.visibility = when (isLoading) {
+            binding.loading.visibility = when (isLoading) {
                 true -> View.VISIBLE
                 false -> View.GONE
             }
-            swipeRefreshLayout.visibility = when (isLoading) {
+            binding.swipeRefreshLayout.visibility = when (isLoading) {
                 true -> View.GONE
                 false -> View.VISIBLE
             }

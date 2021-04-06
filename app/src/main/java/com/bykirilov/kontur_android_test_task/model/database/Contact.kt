@@ -3,7 +3,6 @@ package com.bykirilov.kontur_android_test_task.model.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "contact_table")
 data class Contact(

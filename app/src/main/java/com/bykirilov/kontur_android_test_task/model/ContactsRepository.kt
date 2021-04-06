@@ -24,6 +24,8 @@ class ContactsRepository(private val context: Context, private val contactDao: C
             return currentTime - lastDownloadTime > TimeUnit.MILLISECONDS.convert(1, TimeUnit.MINUTES)
         }
 
+    suspend fun getContactById(id: String) = localDataSource.getContactById(id)
+
     suspend fun loadContactsWithRequestCode() : Int {
         val netManager = NetManager(context)
         netManager.isConnectedToInternet?.let {
