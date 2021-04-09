@@ -3,15 +3,28 @@ package com.bykirilov.kontur_android_test_task.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bykirilov.kontur_android_test_task.R
 import com.bykirilov.kontur_android_test_task.model.database.Contact
+import java.util.*
 
-class ContactListAdapter(val itemClickListener: OnItemClickListener) : ListAdapter<Contact, ContactListAdapter.ContactViewHolder>(ContactComparator()) {
+class ContactListAdapter(private val itemClickListener: OnItemClickListener)
+    : ListAdapter<Contact, ContactListAdapter.ContactViewHolder>(ContactComparator()),
+    Filterable
+{
+    private lateinit var originalContacts: List<Contact>
 
+    fun submitList(list: List<Contact>?, updateList: Boolean = false) {
+        submitList(list)
+        if (updateList) {
+            originalContacts = this.currentList
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
         return ContactViewHolder.create(parent)
@@ -20,6 +33,36 @@ class ContactListAdapter(val itemClickListener: OnItemClickListener) : ListAdapt
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
         val current = getItem(position)
         holder.bind(current, itemClickListener)
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val results = FilterResults()
+
+                if (constraint == null || constraint.isEmpty()) {
+                    results.values = originalContacts
+                    results.count = originalContacts.size
+                }
+                else {
+                    val resultContacts = mutableListOf<Contact>()
+
+                    for (contact in originalContacts) {
+                        if (contact.name.contains(constraint) ||
+                                contact.phone.contains(constraint)) {
+                            resultContacts.add(contact)
+                        }
+                    }
+                    results.values = resultContacts
+                    results.count = resultContacts.size
+                }
+                return results
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                submitList(results?.values as List<Contact>?, false)
+            }
+        }
     }
 
     class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -57,6 +100,5 @@ class ContactListAdapter(val itemClickListener: OnItemClickListener) : ListAdapt
                     && oldItem.phone == newItem.phone
                     && oldItem.height == newItem.height
         }
-
     }
 }

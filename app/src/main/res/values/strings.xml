@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Kontur_android_test_task</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_title">Поиск</string>
+    <string name="search_icon_description">Search icon</string>
 </resources>

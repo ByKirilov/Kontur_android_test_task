@@ -37,7 +37,7 @@ class ContactDetailsFragment : Fragment() {
         val view = binding.root
 
         binding.toolbar.apply {
-            setNavigationIcon(R.drawable.baseline_arrow_back_24)
+            setNavigationIcon(R.drawable.ic_arrow_back)
             setNavigationOnClickListener { activity?.supportFragmentManager?.popBackStack() }
         }
 
