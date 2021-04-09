@@ -36,6 +36,11 @@ class ContactDetailsFragment : Fragment() {
         binding = FragmentContactDetailsBinding.inflate(layoutInflater)
         val view = binding.root
 
+        binding.toolbar.apply {
+            setNavigationIcon(R.drawable.baseline_arrow_back_24)
+            setNavigationOnClickListener { activity?.supportFragmentManager?.popBackStack() }
+        }
+
         contactId?.let { id ->
             viewModel.loadContactById(id)
             viewModel.contact.observe(viewLifecycleOwner) {
