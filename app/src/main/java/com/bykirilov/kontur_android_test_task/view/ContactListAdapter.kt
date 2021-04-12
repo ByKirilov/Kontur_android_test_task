@@ -101,4 +101,14 @@ class ContactListAdapter(private val itemClickListener: OnItemClickListener)
                     && oldItem.height == newItem.height
         }
     }
+
+    companion object ContactListAdapterFactory {
+        private var adapter: ContactListAdapter? = null
+        fun create(itemClickListener: OnItemClickListener) : ContactListAdapter {
+            if (adapter == null) {
+                adapter = ContactListAdapter(itemClickListener)
+            }
+            return adapter as ContactListAdapter
+        }
+    }
 }

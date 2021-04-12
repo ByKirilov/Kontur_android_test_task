@@ -23,17 +23,22 @@ class ContactsListFragment : Fragment() {
         ContactsListViewModelFactory((activity?.application as ContactsApplication).repository)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) {
+            viewModel.preferContacts()
+        }
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View {
 
-        viewModel.preferContacts()
-
         binding = FragmentContactsListBinding.inflate(layoutInflater)
         val view = binding.root
 
-        val adapter = ContactListAdapter(object : OnItemClickListener {
+        val adapter = ContactListAdapter.create(object : OnItemClickListener {
             override fun onItemClicked(contact: Contact) {
                 activity!!.supportFragmentManager
                         .beginTransaction()
