@@ -30,14 +30,10 @@ class ContactsListViewModel(private val repository: ContactsRepository) : ViewMo
     }
 
     private suspend fun loadContacts() {
-            val requestCode = repository.loadContactsWithRequestCode()
-            if (requestCode == ContactsRepository.NO_INTERNET_REQUEST_CODE) {
-                _showSnackBar.value = Event(NO_INTERNET_MESSAGE)
-            }
+        val requestCode = repository.loadContactsWithRequestCode()
+        if (requestCode == ContactsRepository.NO_INTERNET_REQUEST_CODE) {
+            _showSnackBar.value = Event(NO_INTERNET_MESSAGE)
         }
-
-    fun insert(contact: Contact) = viewModelScope.launch {
-        repository.insert(contact)
     }
 
     companion object {

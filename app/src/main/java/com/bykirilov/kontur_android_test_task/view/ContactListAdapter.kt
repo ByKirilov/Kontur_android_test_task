@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bykirilov.kontur_android_test_task.R
 import com.bykirilov.kontur_android_test_task.model.database.Contact
-import java.util.*
 
+@Suppress("UNCHECKED_CAST")
 class ContactListAdapter(private val itemClickListener: OnItemClickListener)
     : ListAdapter<Contact, ContactListAdapter.ContactViewHolder>(ContactComparator()),
-    Filterable
-{
+    Filterable {
+
     private lateinit var originalContacts: List<Contact>
 
     fun submitList(list: List<Contact>?, updateList: Boolean = false) {
@@ -40,21 +40,21 @@ class ContactListAdapter(private val itemClickListener: OnItemClickListener)
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val results = FilterResults()
 
-                if (constraint == null || constraint.isEmpty()) {
+                if (constraint.isNullOrEmpty()) {
                     results.values = originalContacts
                     results.count = originalContacts.size
                 }
                 else {
-                    val resultContacts = mutableListOf<Contact>()
+                    val filteredContacts = mutableListOf<Contact>()
 
                     for (contact in originalContacts) {
                         if (contact.name.contains(constraint) ||
                                 contact.phone.contains(constraint)) {
-                            resultContacts.add(contact)
+                            filteredContacts.add(contact)
                         }
                     }
-                    results.values = resultContacts
-                    results.count = resultContacts.size
+                    results.values = filteredContacts
+                    results.count = filteredContacts.size
                 }
                 return results
             }
@@ -104,7 +104,7 @@ class ContactListAdapter(private val itemClickListener: OnItemClickListener)
 
     companion object ContactListAdapterFactory {
         private var adapter: ContactListAdapter? = null
-        fun create(itemClickListener: OnItemClickListener) : ContactListAdapter {
+        fun getAdapter(itemClickListener: OnItemClickListener) : ContactListAdapter {
             if (adapter == null) {
                 adapter = ContactListAdapter(itemClickListener)
             }

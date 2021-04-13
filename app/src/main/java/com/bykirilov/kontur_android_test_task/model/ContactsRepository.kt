@@ -11,10 +11,7 @@ import java.util.concurrent.TimeUnit
 
 class ContactsRepository(private val context: Context, private val contactDao: ContactDao) {
 
-    private val localDataSource = ContactsLocalDataSource(contactDao)
-    private val remoteDataSource = ContactsRemoteDataSource(APIService.create())
-
-    val contacts = localDataSource.contacts
+    val contacts = contactDao.getAllContacts()
 
     val isDataObsolete: Boolean
         get() {
@@ -24,15 +21,17 @@ class ContactsRepository(private val context: Context, private val contactDao: C
             return currentTime - lastDownloadTime > TimeUnit.MILLISECONDS.convert(1, TimeUnit.MINUTES)
         }
 
-    suspend fun getContactById(id: String) = localDataSource.getContactById(id)
+    suspend fun clearContacts() = contactDao.deleteAll()
+
+    suspend fun getContactById(id: String) = contactDao.getContactById(id)
 
     suspend fun loadContactsWithRequestCode() : Int {
         val netManager = NetManager(context)
         netManager.isConnectedToInternet?.let {
              if (it) {
                  return try {
-                     remoteDataSource.getContacts().also { contacts ->
-                         localDataSource.saveContacts(contacts)
+                     getContacts().also { contacts ->
+                         saveContacts(contacts)
                      }
                      updateLastDownloadTime()
                      SUCCESS_REQUEST_CODE
@@ -46,9 +45,21 @@ class ContactsRepository(private val context: Context, private val contactDao: C
         return NO_INTERNET_REQUEST_CODE
     }
 
-    suspend fun insert(contact: Contact) = localDataSource.insert(contact)
+    private suspend fun getContacts(): List<Contact> {
+        val result = mutableListOf<ContactPOJO>()
+        val apiService = APIService.create()
+        for (i in 1..3) {
+            val contact = apiService.getContacts(i)
+            result += contact
+        }
+        return result.map { it.toContact() }
+    }
 
-    suspend fun clearContacts() = localDataSource.deleteAll()
+    private suspend fun saveContacts(contacts: List<Contact>) {
+        for (contact in contacts) {
+            contactDao.insert(contact)
+        }
+    }
 
     private fun updateLastDownloadTime() {
         val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)

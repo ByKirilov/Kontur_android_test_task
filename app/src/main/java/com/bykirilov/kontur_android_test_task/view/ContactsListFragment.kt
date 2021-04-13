@@ -38,7 +38,7 @@ class ContactsListFragment : Fragment() {
         binding = FragmentContactsListBinding.inflate(layoutInflater)
         val view = binding.root
 
-        val adapter = ContactListAdapter.create(object : OnItemClickListener {
+        val adapter = ContactListAdapter.getAdapter(object : OnItemClickListener {
             override fun onItemClicked(contact: Contact) {
                 activity!!.supportFragmentManager
                         .beginTransaction()
@@ -49,6 +49,7 @@ class ContactsListFragment : Fragment() {
                         .commit()
             }
         })
+
         binding.contactRecyclerview.apply {
             this.adapter = adapter
             layoutManager = LinearLayoutManager(activity)
