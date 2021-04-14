@@ -13,7 +13,7 @@ import com.bykirilov.kontur_android_test_task.R
 import com.bykirilov.kontur_android_test_task.model.database.Contact
 
 @Suppress("UNCHECKED_CAST")
-class ContactListAdapter(private val itemClickListener: OnItemClickListener)
+class ContactListAdapter(private var itemClickListener: OnItemClickListener)
     : ListAdapter<Contact, ContactListAdapter.ContactViewHolder>(ContactComparator()),
     Filterable {
 
@@ -108,7 +108,9 @@ class ContactListAdapter(private val itemClickListener: OnItemClickListener)
             if (adapter == null) {
                 adapter = ContactListAdapter(itemClickListener)
             }
-            return adapter as ContactListAdapter
+            return (adapter as ContactListAdapter).apply {
+                this.itemClickListener = itemClickListener
+            }
         }
     }
 }
